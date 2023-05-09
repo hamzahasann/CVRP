@@ -1,0 +1,9 @@
+folium 
+pandas
+numpy
+matplotlib
+flask
+flask_socketio
+googlemaps
+requests
+gmplot
