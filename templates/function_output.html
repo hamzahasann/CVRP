@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Output</title>
+    <style>
+        .output-container {
+            height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <h1>Function Output</h1>
+    <button id="startBtn">Start Function</button>
+    <div class="output-container">
+        <ul id="output-list"></ul>
+    </div>
+    <button id="showRoutesBtn" style="display: none;">Show Routes</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        const socket = io.connect('/function_output');
+        const startBtn = document.getElementById('startBtn');
+        const showRoutesBtn = document.getElementById('showRoutesBtn');
+
+        startBtn.addEventListener('click', () => {
+            socket.emit('start_function');
+        });
+
+        socket.on('new_line', (data) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = data.line;
+            const outputList = document.getElementById('output-list');
+            outputList.appendChild(listItem);
+            outputList.parentNode.scrollTop = outputList.parentNode.scrollHeight;
+        });
+
+        socket.on('function_finished', () => {
+            showRoutesBtn.style.display = 'block';
+        });
+
+        showRoutesBtn.addEventListener('click', () => {
+            window.location.href = '/show_routes';
+        });
+    </script>
+</body>
+</html>

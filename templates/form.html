@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location App</title>
+</head>
+<body>
+    <h1>Enter Location Details</h1>
+    <form action="/save" method="post">
+        {% for i in range(num_locations) %}
+            <label for="location_{{ i }}">Location {{ i+1 }}:</label>
+            <input type="text" id="location_{{ i }}" name="location_{{ i }}" required>
+            <label for="demand_{{ i }}">Demand:</label>
+            <input type="number" id="demand_{{ i }}" name="demand_{{ i }}" required>
+            <br>
+        {% endfor %}
+        <input type="submit" value="Save">
+    </form>
+
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBT_g38I4jmJAQ0NCaS4bDlIY3mMRHQsTI&libraries=places&callback=initAutocomplete"></script>
+    <script>
+        function initAutocomplete() {
+            {% if num_locations %}
+                {% for i in range(num_locations) %}
+                    new google.maps.places.Autocomplete(document.getElementById('location_{{ i }}'), {
+                        componentRestrictions: {country: 'pk'}
+                    });
+                {% endfor %}
+            {% endif %}
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location App</title>
+</head>
+<body>
+    <h1>Enter Locations</h1>
+    <form action="/submit" method="post">
+        <label for="num_locations">Number of locations:</label>
+        <input type="number" id="num_locations" name="num_locations" min="1" required>
+        <input type="submit" value="Next">
+    </form>
+
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBT_g38I4jmJAQ0NCaS4bDlIY3mMRHQsTI&libraries=places&callback=initAutocomplete"></script>
+    <script>
+        function initAutocomplete() {
+        }
+    </script>
+</body>
+</html>
