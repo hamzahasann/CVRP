@@ -28,6 +28,26 @@ def getDistance(loc1,loc2):
     # print the driving distance
     return distance
 
+def create_distance_matrix(locations, api_key):
+    gmaps = googlemaps.Client(key=api_key)
+
+    # Convert locations to string format expected by API
+    locations = [f"{lat},{lon}" for lat, lon in locations]
+
+    # Request distance matrix
+    distance_matrix = gmaps.distance_matrix(locations, locations, mode="driving")
+
+    # Initialize matrix with distances
+    n = len(locations)
+    matrix = [[0]*n for _ in range(n)]
+
+    # Fill matrix with distances
+    for i, row in enumerate(distance_matrix['rows']):
+        for j, element in enumerate(row['elements']):
+            matrix[i][j] = round(element['distance']['value']/1000,2)
+
+    return matrix
+
 def solveVRP():
     data=pd.read_csv('data.txt',sep='\t')
 
@@ -37,14 +57,15 @@ def solveVRP():
     coordinates=data[['Latitude','Longitude']].values
 
     # build distance matrix
-    distance_matrix=np.arange(len(locations)**2).reshape(len(locations),len(locations))
 
     yield "Building distance matrix"
+    distance_matrix=np.array(create_distance_matrix([[loc.lat,loc.lon] for loc in locations],gmaps_api_key))
 
-    for i in range(len(locations)):
-        for j in range(len(locations)):
-            distance_matrix[i][j]=getDistance(locations[i],locations[j])
-    
+    # distance_matrix=np.arange(len(locations)**2).reshape(len(locations),len(locations))
+    # for i in range(len(locations)):
+    #     for j in range(len(locations)):
+    #         distance_matrix[i][j]=getDistance(locations[i],locations[j])
+    print(distance_matrix)
     yield "Distance matrix built"
     # build demands matrix
     demands=np.concatenate([data['Demand'].values,np.zeros(len(locations)*4)]).reshape(5,len(locations)).T
@@ -144,5 +165,6 @@ def report_routes_info():
         print(routes_description[-1])
     return routes_description
         
-
+# for i in solveVRP():
+#     print(i)
 # report_routes_info()
